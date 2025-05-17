@@ -1,5 +1,6 @@
 from flask import Flask, request, render_template
 import hashlib
+import jsonify
 
 app = Flask(__name__)
 
@@ -15,6 +16,11 @@ def index():
             m.update(password.encode())
             hash_result = m.hexdigest()
     return render_template("index.html", hash_result=hash_result, hash_type=hash_type)
+
+
+@app.route('/health')
+def health():
+    return jsonify(status="OK"), 200
 
 if __name__ == "__main__":
     app.run(debug=True)

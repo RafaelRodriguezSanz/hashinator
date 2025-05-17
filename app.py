@@ -1,6 +1,5 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, jsonify
 import hashlib
-import jsonify
 
 app = Flask(__name__)
 

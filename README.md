@@ -1,2 +1,3 @@
-# hashinator
-App to generate hash codes
+# 🛡 Hashinator
+
+App to generate awsome hash codes and just that.

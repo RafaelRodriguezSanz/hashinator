@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Hashinator</title>
+    <link rel="icon" href="https://em-content.zobj.net/thumbs/240/apple/354/shield_1f6e1-fe0f.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #1e1e2f;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --primary: #7c3aed;
+            --primary-hover: #6d28d9;
+            --text-color: #e0e0e0;
+            --input-bg: rgba(255, 255, 255, 0.06);
+            --tooltip-bg: #333;
+            --border: rgba(255, 255, 255, 0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: radial-gradient(circle at 30% 30%, #2a2a40 0%, #1e1e2f 100%);
+        }
+
+        .container {
+            background: var(--card-bg);
+            padding: 2.5rem 3rem;
+            border-radius: 20px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            width: 100%;
+            max-width: 480px;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 1.8rem;
+            color: white;
+        }
+
+        label {
+            font-weight: 600;
+            display: block;
+            margin-top: 1.2rem;
+            margin-bottom: 0.4rem;
+            color: #cfcfcf;
+        }
+
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 0.65rem 0.8rem;
+            font-size: 1rem;
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-color);
+        }
+
+        button {
+            margin-top: 2rem;
+            width: 100%;
+            padding: 0.75rem;
+            font-size: 1rem;
+            font-weight: 600;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.25s ease;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .result {
+            margin-top: 3rem;
+            background-color: rgba(255, 255, 255, 0.07);
+            padding: 1rem;
+            border-radius: 12px;
+            word-break: break-all;
+            cursor: pointer;
+            position: relative;
+            animation: fadeIn 0.4s ease-in;
+            border: 1px solid var(--border);
+        }
+
+        .result strong {
+            color: #ffffff;
+        }
+
+        .tooltip {
+            position: absolute;
+            top: -35px;
+            right: 10px;
+            background-color: var(--tooltip-bg);
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
+
+        .result:hover .tooltip {
+            opacity: 1;
+        }
+
+        .copy-success {
+            animation: fadeOut 1.5s forwards;
+        }
+
+        @keyframes fadeIn {
+            from {opacity: 0; transform: translateY(10px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+
+        @keyframes fadeOut {
+            0% {opacity: 1;}
+            100% {opacity: 0;}
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🔐 Generador de Hash</h1>
+    <form method="post">
+        <label for="password" title="Escribe el texto que deseas codificar.">Texto a hashear:</label>
+        <input type="text" id="password" name="password" required>
+
+        <label for="hash_type" title="Selecciona el algoritmo de hash que desees usar.">Tipo de hash:</label>
+        <select id="hash_type" name="hash_type">
+            <option value="sha256" {% if hash_type == "sha256" %}selected{% endif %}>SHA-256</option>
+            <option value="sha512" {% if hash_type == "sha512" %}selected{% endif %}>SHA-512</option>
+            <option value="md5" {% if hash_type == "md5" %}selected{% endif %}>MD5</option>
+        </select>
+
+        <button type="submit" title="Haz clic para generar el hash.">Generar Hash</button>
+    </form>
+
+    {% if hash_result %}
+    <div class="result" onclick="copyToClipboard(this)" title="Haz clic para copiar el hash">
+        <span class="tooltip" id="tooltip">Clic para copiar</span>
+        <strong>{{ hash_type.upper() }}:</strong><br>
+        <span id="hashText">{{ hash_result }}</span>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    function copyToClipboard(el) {
+        const hashText = el.querySelector('#hashText').innerText;
+        navigator.clipboard.writeText(hashText).then(() => {
+            const tooltip = el.querySelector('.tooltip');
+            tooltip.innerText = "¡Copiado!";
+            tooltip.classList.add('copy-success');
+            setTimeout(() => {
+                tooltip.innerText = "Clic para copiar";
+                tooltip.classList.remove('copy-success');
+            }, 2000);
+        });
+    }
+</script>
+</body>
+</html>

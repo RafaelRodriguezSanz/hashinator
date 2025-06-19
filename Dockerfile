@@ -1,4 +1,4 @@
-FROM python:3.9-slim
+FROM public.ecr.aws/docker/library/python:3.13-rc-alpine3.18
 
 WORKDIR /app
 COPY requirements.txt .
